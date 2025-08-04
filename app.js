@@ -964,9 +964,24 @@ window.saveSession = async function () {
   }
 };
 
+// firebase 
+import { db, auth, storage } from './firebase-setup.js';
+
+import {
+  collection, addDoc, doc, setDoc
+} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+
+import {
+  ref as storageRef, uploadBytes, getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js";
+
+import {
+  GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+
 
 async function onStopTracking() {
-  const user = firebase.auth.currentUser;
+  const user = auth.currentUser;
   if (!user) return alert("You must be logged in.");
 
   const name = prompt("Enter route name:");
@@ -1013,12 +1028,9 @@ async function onStopTracking() {
 }
 
 
- import {
-  collection, addDoc, doc, setDoc
-} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
-
+ 
 async function saveRouteToFirestore(userId, routeMeta, routePoints, accessibilityData) {
-  const routesRef = collection(firebase.db, "routes");
+  const routesRef = collection(db, "routes");
 
   // Save route metadata
   const routeDocRef = await addDoc(routesRef, {
@@ -1048,19 +1060,16 @@ async function saveRouteToFirestore(userId, routeMeta, routePoints, accessibilit
   return routeId;
 }
 
-  import {
-  ref, uploadBytes, getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js";
 
-async function uploadFileToStorage(userId, routeId, fileBlob, filename) {
+async function uploadFileToStorage(userId, routeId, blob, filename) {
   const path = `${userId}/${routeId}/${filename}`;
-  const fileRef = ref(firebase.storage, path);
-  await uploadBytes(fileRef, fileBlob);
-  return await getDownloadURL(fileRef); // 👈 Use in routePoints
+  const ref = storageRef(storage, path);
+  await uploadBytes(ref, blob);
+  return await getDownloadURL(ref);
 }
 
   async function onStopTracking() {
-  const user = firebase.auth.currentUser;
+  const user = auth.currentUser;
   if (!user) return alert("You must be logged in.");
 
   const name = prompt("Enter route name:");
