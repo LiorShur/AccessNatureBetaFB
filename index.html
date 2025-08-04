@@ -1595,35 +1595,6 @@
             opacity: 0.7;
         }
     </style>
-  <script type="module">
-  
-  // Login UI logic
-  const loginPanel = document.getElementById("loginPanel");
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  document.getElementById("loginGoogleBtn").onclick = () => {
-    signInWithPopup(auth, new GoogleAuthProvider()).catch(alert);
-  };
-
-  document.getElementById("loginEmailBtn").onclick = () => {
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("password").value;
-    signInWithEmailAndPassword(auth, email, pass).catch(alert);
-  };
-
-  logoutBtn.onclick = () => signOut(auth);
-
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      loginPanel.style.display = "none";
-      logoutBtn.style.display = "block";
-      loadUserRoutes(user.uid); // <-- next phase
-    } else {
-      loginPanel.style.display = "block";
-      logoutBtn.style.display = "none";
-    }
-  });
-</script>
 
 </head>
 <body>
