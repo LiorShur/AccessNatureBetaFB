@@ -1595,8 +1595,65 @@
             opacity: 0.7;
         }
     </style>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+  import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+  import { getStorage } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "XXXXXX",
+    appId: "XXXXXX"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  window.firebase = { auth, db, storage };
+
+  // Login UI logic
+  const loginPanel = document.getElementById("loginPanel");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  document.getElementById("loginGoogleBtn").onclick = () => {
+    signInWithPopup(auth, new GoogleAuthProvider()).catch(alert);
+  };
+
+  document.getElementById("loginEmailBtn").onclick = () => {
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+    signInWithEmailAndPassword(auth, email, pass).catch(alert);
+  };
+
+  logoutBtn.onclick = () => signOut(auth);
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      loginPanel.style.display = "none";
+      logoutBtn.style.display = "block";
+      loadUserRoutes(user.uid); // <-- next phase
+    } else {
+      loginPanel.style.display = "block";
+      logoutBtn.style.display = "none";
+    }
+  });
+</script>
+
 </head>
 <body>
+<div id="loginPanel">
+  <button id="loginGoogleBtn">Sign in with Google</button><br>
+  <input type="email" id="email" placeholder="Email" /><br>
+  <input type="password" id="password" placeholder="Password" /><br>
+  <button id="loginEmailBtn">Sign in with Email</button>
+</div>
+<button id="logoutBtn" style="display:none">Logout</button>
 
 <div id="debug"></div>
 
@@ -2551,6 +2608,28 @@
   <h3>📂 Saved Routes</h3>
   <ul id="savedSessionsList"></ul>
 </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+  import { getStorage } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "XXXXXX",
+    appId: "XXXXXX"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const storage = getStorage(app);
+
+  window.firebase = { app, db, auth, storage }; // Expose to global
+</script>
 
 <script>
 // Toggle media panel
