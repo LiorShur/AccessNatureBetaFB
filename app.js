@@ -971,7 +971,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  GoogleAuthProvider,
   signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
