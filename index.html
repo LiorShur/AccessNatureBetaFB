@@ -1627,13 +1627,18 @@
 
 </head>
 <body>
-<div id="loginPanel">
-  <button id="loginGoogleBtn">Sign in with Google</button><br>
-  <input type="email" id="email" placeholder="Email" /><br>
-  <input type="password" id="password" placeholder="Password" /><br>
-  <button id="loginEmailBtn">Sign in with Email</button>
+<div id="authSection">
+  <div id="userInfo" style="display:none;">
+    <p>Welcome, <span id="userEmail"></span>!</p>
+    <button id="logoutBtn">Logout</button>
+  </div>
+  <div id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Email" />
+    <input type="password" id="loginPassword" placeholder="Password" />
+    <button id="loginBtn">Login</button>
+    <button id="googleLoginBtn">Sign in with Google</button>
+  </div>
 </div>
-<button id="logoutBtn" style="display:none">Logout</button>
 
 <div id="debug"></div>
 
