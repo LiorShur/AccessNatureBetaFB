@@ -6,12 +6,12 @@ import { getStorage } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-s
 
 // ✅ Your Firebase config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MSG_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAmsm916Lzp0MUXANq3SECO4ec7q1H0Vu4",
+  authDomain: "accessnaturebeta-821a2.firebaseapp.com",
+  projectId: "accessnaturebeta-821a2",
+  storageBucket: "accessnaturebeta-821a2.appspot.com",
+  messagingSenderId: "670888101781",
+  appId: "1:670888101781:web:b4cf57f58e86182466589c"
 };
 
 // ✅ Initialize only once
