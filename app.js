@@ -1068,54 +1068,7 @@ async function uploadFileToStorage(userId, routeId, blob, filename) {
   return await getDownloadURL(ref);
 }
 
-  async function onStopTracking() {
-  const user = auth.currentUser;
-  if (!user) return alert("You must be logged in.");
-
-  const name = prompt("Enter route name:");
-  if (!name) return;
-
-  const metadata = {
-    name,
-    totalDistance,
-    duration: Date.now() - startTime,
-    accessibleLength,
-    bounds: map.getBounds(),
-    description: "Route from user input", // optional
-  };
-
-  // Convert routeData into clean Firestore-ready points
-  const points = [];
-  for (const entry of routeData) {
-    const base = {
-      type: entry.type,
-      timestamp: entry.timestamp,
-      coords: entry.coords || null
-    };
-
-    if (entry.type === "photo" && entry.content.startsWith("data:image")) {
-      const blob = await (await fetch(entry.content)).blob();
-      const url = await uploadFileToStorage(user.uid, "temp", blob, `photo-${Date.now()}.jpg`);
-      points.push({ ...base, url });
-    } else if (entry.type === "text") {
-      points.push({ ...base, content: entry.content });
-    } else if (entry.type === "audio") {
-      const blob = await (await fetch(entry.content)).blob();
-      const url = await uploadFileToStorage(user.uid, "temp", blob, `audio-${Date.now()}.webm`);
-      points.push({ ...base, url });
-    } else if (entry.type === "location") {
-      points.push(base);
-    }
-  }
-
-  // Accessibility survey
-  const formData = JSON.parse(localStorage.getItem("accessibilityData") || "{}");
-
-  // Save all to Firestore
-  const routeId = await saveRouteToFirestore(user.uid, metadata, points, formData);
-}
-
-
+  
 // === LOAD SESSION LIST ===
 window.loadSavedSessions = function () {
   const list = document.getElementById("savedSessionsList");
