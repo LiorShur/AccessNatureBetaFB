@@ -820,10 +820,60 @@ window.addEventListener("beforeunload", function (e) {
   }
 });
 
-window.saveSession = function () {
+// window.saveSession = function () {
+//   console.log("🔍 Attempting to save session...");
+
+//     if (!routeData || routeData.length === 0) {
+//     alert("⚠️ No route data to save.");
+//     return false;
+//   }
+
+//   const name = prompt("Enter a name for this route:");
+//   if (!name) return false;
+
+//   const session = {
+//     name,
+//     date: new Date().toISOString(),
+//     time: document.getElementById("timer").textContent,
+//     distance: totalDistance.toFixed(2),
+//     data: routeData
+//   };
+
+//   try {
+//     const sessions = JSON.parse(localStorage.getItem("sessions") || "[]");
+//     sessions.push(session);
+//     localStorage.setItem("sessions", JSON.stringify(sessions));
+//     localStorage.removeItem("route_backup");
+
+//     alert(`✅ Route saved successfully!
+
+// 🏁 Route Summary:
+// 📏 Distance: ${totalDistance.toFixed(2)} km
+// ⏱️ Time: ${document.getElementById("timer").textContent}`);
+//     document.getElementById("resetBtn").disabled = false;
+//     loadSavedSessions();
+//     return true;
+//   } catch (e) {
+//     // console.error("❌ Save failed:", e);
+//     // alert("❌ Could not save the route.");
+//     // return false;
+//     console.warn("❌ Save failed due to storage limits. Falling back to auto-export...");
+//     exportData();
+//     exportGPX();
+//     exportPDF();
+//     exportRouteSummary(); // ✅ Use your rich summary generator
+//     alert("🛡 Storage full. Auto-exported full route summary as backup.");
+//     return false;
+//   }
+//   onStopTracking();
+//   document.getElementById("resetBtn").disabled = false;
+//   initMap();
+// };
+
+window.saveSession = async function () {
   console.log("🔍 Attempting to save session...");
 
-    if (!routeData || routeData.length === 0) {
+  if (!routeData || routeData.length === 0) {
     alert("⚠️ No route data to save.");
     return false;
   }
@@ -840,34 +890,221 @@ window.saveSession = function () {
   };
 
   try {
+    // ✅ 1. Save to localStorage (fallback/local mode)
     const sessions = JSON.parse(localStorage.getItem("sessions") || "[]");
     sessions.push(session);
     localStorage.setItem("sessions", JSON.stringify(sessions));
     localStorage.removeItem("route_backup");
 
+    // ✅ 2. Save to Firebase if user is logged in
+    const user = firebase.auth.currentUser;
+    if (user) {
+      const points = [];
+
+      for (const entry of routeData) {
+        const base = {
+          type: entry.type,
+          timestamp: entry.timestamp,
+          coords: entry.coords || null
+        };
+
+        if (entry.type === "photo" && entry.content.startsWith("data:image")) {
+          const blob = await (await fetch(entry.content)).blob();
+          const url = await uploadFileToStorage(user.uid, "temp", blob, `photo-${Date.now()}.jpg`);
+          points.push({ ...base, url });
+        } else if (entry.type === "audio" && entry.content.startsWith("data:audio")) {
+          const blob = await (await fetch(entry.content)).blob();
+          const url = await uploadFileToStorage(user.uid, "temp", blob, `audio-${Date.now()}.webm`);
+          points.push({ ...base, url });
+        } else if (entry.type === "text") {
+          points.push({ ...base, content: entry.content });
+        } else if (entry.type === "location") {
+          points.push(base);
+        }
+      }
+
+      const formData = JSON.parse(localStorage.getItem("accessibilityData") || "{}");
+
+      await saveRouteToFirestore(user.uid, {
+        name,
+        totalDistance,
+        duration: Date.now() - startTime,
+        accessibleLength,
+        bounds: map.getBounds(),
+        description: ""
+      }, points, formData);
+
+      console.log("📦 Synced to Firebase");
+    }
+
+    // ✅ 3. Show success message
     alert(`✅ Route saved successfully!
 
 🏁 Route Summary:
 📏 Distance: ${totalDistance.toFixed(2)} km
 ⏱️ Time: ${document.getElementById("timer").textContent}`);
+
     document.getElementById("resetBtn").disabled = false;
     loadSavedSessions();
     return true;
+
   } catch (e) {
-    // console.error("❌ Save failed:", e);
-    // alert("❌ Could not save the route.");
-    // return false;
-    console.warn("❌ Save failed due to storage limits. Falling back to auto-export...");
+    console.warn("❌ Save failed:", e);
+    console.warn("📦 Falling back to auto-export...");
     exportData();
     exportGPX();
     exportPDF();
-    exportRouteSummary(); // ✅ Use your rich summary generator
-    alert("🛡 Storage full. Auto-exported full route summary as backup.");
+    exportRouteSummary();
+    alert("🛡 Storage full or error occurred. Auto-exported full route summary as backup.");
     return false;
+  } finally {
+    document.getElementById("resetBtn").disabled = false;
+    onStopTracking();
+    initMap();
   }
-  document.getElementById("resetBtn").disabled = false;
-  initMap();
 };
+
+
+async function onStopTracking() {
+  const user = firebase.auth.currentUser;
+  if (!user) return alert("You must be logged in.");
+
+  const name = prompt("Enter route name:");
+  if (!name) return;
+
+  const metadata = {
+    name,
+    totalDistance,
+    duration: Date.now() - startTime,
+    accessibleLength,
+    bounds: map.getBounds(),
+    description: "Route from user input", // optional
+  };
+
+  // Convert routeData into clean Firestore-ready points
+  const points = [];
+  for (const entry of routeData) {
+    const base = {
+      type: entry.type,
+      timestamp: entry.timestamp,
+      coords: entry.coords || null
+    };
+
+    if (entry.type === "photo" && entry.content.startsWith("data:image")) {
+      const blob = await (await fetch(entry.content)).blob();
+      const url = await uploadFileToStorage(user.uid, "temp", blob, `photo-${Date.now()}.jpg`);
+      points.push({ ...base, url });
+    } else if (entry.type === "text") {
+      points.push({ ...base, content: entry.content });
+    } else if (entry.type === "audio") {
+      const blob = await (await fetch(entry.content)).blob();
+      const url = await uploadFileToStorage(user.uid, "temp", blob, `audio-${Date.now()}.webm`);
+      points.push({ ...base, url });
+    } else if (entry.type === "location") {
+      points.push(base);
+    }
+  }
+
+  // Accessibility survey
+  const formData = JSON.parse(localStorage.getItem("accessibilityData") || "{}");
+
+  // Save all to Firestore
+  const routeId = await saveRouteToFirestore(user.uid, metadata, points, formData);
+}
+
+
+ import {
+  collection, addDoc, doc, setDoc
+} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+
+async function saveRouteToFirestore(userId, routeMeta, routePoints, accessibilityData) {
+  const routesRef = collection(firebase.db, "routes");
+
+  // Save route metadata
+  const routeDocRef = await addDoc(routesRef, {
+    userId,
+    name: routeMeta.name,
+    createdAt: Date.now(),
+    totalDistance: routeMeta.totalDistance,
+    duration: routeMeta.duration,
+    accessibleLength: routeMeta.accessibleLength,
+    bounds: routeMeta.bounds,
+    description: routeMeta.description || ""
+  });
+
+  const routeId = routeDocRef.id;
+
+  // Save route points as subcollection
+  for (const point of routePoints) {
+    await addDoc(collection(routeDocRef, "routePoints"), point);
+  }
+
+  // Save accessibility form if available
+  if (accessibilityData) {
+    await setDoc(doc(routeDocRef, "accessibilitySurvey", "formData"), accessibilityData);
+  }
+
+  console.log("✅ Route and data saved with ID:", routeId);
+  return routeId;
+}
+
+  import {
+  ref, uploadBytes, getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js";
+
+async function uploadFileToStorage(userId, routeId, fileBlob, filename) {
+  const path = `${userId}/${routeId}/${filename}`;
+  const fileRef = ref(firebase.storage, path);
+  await uploadBytes(fileRef, fileBlob);
+  return await getDownloadURL(fileRef); // 👈 Use in routePoints
+}
+
+  async function onStopTracking() {
+  const user = firebase.auth.currentUser;
+  if (!user) return alert("You must be logged in.");
+
+  const name = prompt("Enter route name:");
+  if (!name) return;
+
+  const metadata = {
+    name,
+    totalDistance,
+    duration: Date.now() - startTime,
+    accessibleLength,
+    bounds: map.getBounds(),
+    description: "Route from user input", // optional
+  };
+
+  // Convert routeData into clean Firestore-ready points
+  const points = [];
+  for (const entry of routeData) {
+    const base = {
+      type: entry.type,
+      timestamp: entry.timestamp,
+      coords: entry.coords || null
+    };
+
+    if (entry.type === "photo" && entry.content.startsWith("data:image")) {
+      const blob = await (await fetch(entry.content)).blob();
+      const url = await uploadFileToStorage(user.uid, "temp", blob, `photo-${Date.now()}.jpg`);
+      points.push({ ...base, url });
+    } else if (entry.type === "text") {
+      points.push({ ...base, content: entry.content });
+    } else if (entry.type === "audio") {
+      const blob = await (await fetch(entry.content)).blob();
+      const url = await uploadFileToStorage(user.uid, "temp", blob, `audio-${Date.now()}.webm`);
+      points.push({ ...base, url });
+    } else if (entry.type === "location") {
+      points.push(base);
+    }
+  }
+
+  // Accessibility survey
+  const formData = JSON.parse(localStorage.getItem("accessibilityData") || "{}");
+
+  // Save all to Firestore
+  const routeId = await saveRouteToFirestore(user.uid, metadata, points, formData);
+}
 
 
 // === LOAD SESSION LIST ===
