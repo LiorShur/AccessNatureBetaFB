@@ -965,6 +965,61 @@ window.saveSession = async function () {
 };
 
 // firebase 
+
+// app.js
+import { auth } from './firebase-setup.js';
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup
+} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+
+// UI Elements
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const googleLoginBtn = document.getElementById("googleLoginBtn");
+const loginEmail = document.getElementById("loginEmail");
+const loginPassword = document.getElementById("loginPassword");
+const userEmailSpan = document.getElementById("userEmail");
+
+loginBtn.onclick = async () => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
+    console.log("✅ Signed in:", userCredential.user.email);
+  } catch (error) {
+    alert("❌ Login failed: " + error.message);
+  }
+};
+
+googleLoginBtn.onclick = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    console.log("✅ Google Sign-in success:", result.user.email);
+  } catch (err) {
+    alert("❌ Google Sign-in failed: " + err.message);
+  }
+};
+
+logoutBtn.onclick = async () => {
+  await signOut(auth);
+  console.log("🔒 Logged out");
+};
+
+// Auto-update UI
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById("userInfo").style.display = "block";
+    document.getElementById("loginForm").style.display = "none";
+    userEmailSpan.textContent = user.email;
+  } else {
+    document.getElementById("userInfo").style.display = "none";
+    document.getElementById("loginForm").style.display = "block";
+  }
+});
+
 import { db, auth, storage } from './firebase-setup.js';
 
 import {
