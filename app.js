@@ -1029,7 +1029,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js";
 
 import {
-  GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+  signInWithPopup, signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
 
