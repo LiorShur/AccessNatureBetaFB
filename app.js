@@ -897,7 +897,7 @@ window.saveSession = async function () {
     localStorage.removeItem("route_backup");
 
     // ✅ 2. Save to Firebase if user is logged in
-    const user = firebase.auth.currentUser;
+    const user = auth.currentUser;
     if (user) {
       const points = [];
 
@@ -967,7 +967,6 @@ window.saveSession = async function () {
 // firebase 
 
 // app.js
-import { auth } from './firebase-setup.js';
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -1020,7 +1019,7 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-import { db, auth, storage } from './firebase-setup.js';
+import { db, storage } from './firebase-setup.js';
 
 import {
   collection, addDoc, doc, setDoc
