@@ -1039,7 +1039,7 @@ window.saveSession = async function () {
 
     alert(`✅ Route saved successfully!\n📏 Distance: ${totalDistance.toFixed(2)} km\n⏱️ Time: ${sessionDoc.time}`);
     document.getElementById("resetBtn").disabled = false;
-    spinner.classList.add("hidden");   // Hide
+    //spinner.classList.add("hidden");   // Hide
     resetApp();
     return true;
 
