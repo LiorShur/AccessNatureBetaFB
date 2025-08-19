@@ -1046,7 +1046,8 @@ window.saveSession = async function () {
   } catch (error) {
     console.error("❌ Save failed:", error);
     alert("❌ Could not save session to Firebase.");
-    exportRouteSummary(); // fallback
+    //exportRouteSummary(); // fallback
+    prepareAndExport();
     return false;
   } finally {
     // ✅ Always hide the spinner
