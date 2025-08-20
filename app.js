@@ -993,6 +993,8 @@ window.saveSession = async function () {
     return false;
   }
 
+  const formData = JSON.parse(localStorage.getItem("accessibilityData") || "{}");
+
   const sessionDoc = {
     name,
     userId: user.uid,
@@ -1254,7 +1256,7 @@ async function onStopTracking() {
   }
 
   // Accessibility survey
-  const formData = JSON.parse(localStorage.getItem("accessibilityData") || "{}");
+  //const formData = JSON.parse(localStorage.getItem("accessibilityData") || "{}");
 
   // Save all to Firestore
   const routeId = await saveRouteToFirestore(user.uid, metadata, points, formData);
