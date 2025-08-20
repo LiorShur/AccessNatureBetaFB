@@ -998,7 +998,9 @@ window.saveSession = async function () {
     userId: user.uid,
     date: new Date().toISOString(),
     time: document.getElementById("timer").textContent,
-    distance: totalDistance.toFixed(2)
+    distance: totalDistance.toFixed(2),
+    data: routeData,
+    accessibilityData: accessibilityData
   };
 
   document.getElementById("savingOverlay").classList.remove("hidden"); // Show
