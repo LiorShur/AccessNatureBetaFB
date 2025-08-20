@@ -1000,7 +1000,7 @@ window.saveSession = async function () {
     time: document.getElementById("timer").textContent,
     distance: totalDistance.toFixed(2),
     data: routeData,
-    accessibility: accessibilityData
+    accessibility: formData
   };
 
   document.getElementById("savingOverlay").classList.remove("hidden"); // Show
