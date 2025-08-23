@@ -4632,7 +4632,7 @@ function closeHistory() {
 function toggleDarkMode() {
   document.body.classList.toggle("dark-mode");
 }
-window.clearAllSessions = clearAllSessions() {
+window.clearAllSessions = function () {
   const confirmClear = confirm("⚠️ Are you sure you want to clear all saved routes? This cannot be undone!");
 
   if (confirmClear) {
