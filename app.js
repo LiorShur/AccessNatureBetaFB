@@ -4632,7 +4632,7 @@ function closeHistory() {
 function toggleDarkMode() {
   document.body.classList.toggle("dark-mode");
 }
-function clearAllSessions() {
+window.clearAllSessions = clearAllSessions() {
   const confirmClear = confirm("⚠️ Are you sure you want to clear all saved routes? This cannot be undone!");
 
   if (confirmClear) {
@@ -4651,7 +4651,7 @@ window.prepareAndExport = function() {
   });
 }
 
-function clearAllAppData() {
+window.clearAllAppData = function() {
   const confirmClear = confirm("⚠️ This will permanently delete all routes, summaries, and backups. Continue?");
   if (!confirmClear) return;
 
