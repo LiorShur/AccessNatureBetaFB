@@ -1048,8 +1048,6 @@ window.saveSession = async function () {
     //accessibility: formData
   };
 saveSessionToLocalStorage();
-  
-  document.getElementById("savingOverlay").classList.remove("hidden"); // Show
 
   try {
     const sessionRef = await addDoc(collection(db, "routes"), sessionDoc);
@@ -1653,7 +1651,7 @@ window.onload = function () {
 
 // === SUMMARY ARCHIVE MODULE ===
 
-function toggleArchivePanel() {
+window.toggleArchivePanel = function() {
   const panel = document.getElementById("archivePanel");
   //const arrow = document.getElementById("archiveArrow");
 
@@ -1669,7 +1667,7 @@ function toggleArchivePanel() {
 const SummaryArchive = (() => {
   const STORAGE_KEY = "summary_archive";
 
-  function getArchive() {
+  window.getArchive = function() {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   }
 
@@ -1686,11 +1684,11 @@ const SummaryArchive = (() => {
     alert("✅ Route summary saved to archive!");
   }
 
-  function listSummaries() {
+  window.listSummaries = function() {
     return getArchive();
   }
 
-  function deleteSummary(id) {
+  window.deleteSummary = function(id) {
   const confirmed = confirm("🗑️ Are you sure you want to delete this route summary?");
   if (!confirmed) return;
 
@@ -1717,7 +1715,7 @@ const SummaryArchive = (() => {
 }
 
 
-  function viewSummary(id) {
+  window.viewSummary = function(id) {
     const item = getArchive().find(entry => entry.id === id);
     if (!item) return alert("Summary not found!");
 
@@ -1726,7 +1724,7 @@ const SummaryArchive = (() => {
     window.open(url, "_blank");
   }
 
-  function clearAll() {
+  window.clearAll = function() {
     const confirmClear = confirm("⚠️ This will delete all saved summaries permanently. Continue?");
     if (confirmClear) {
       localStorage.removeItem(STORAGE_KEY);
@@ -1753,8 +1751,8 @@ const SummaryArchive = (() => {
       const li = document.createElement("li");
       li.innerHTML = `
         <b>${item.name}</b> (${item.date.split("T")[0]})
-        <button class="toggle panel button" onclick="SummaryArchive.viewSummary(${item.id})">View</button>
-        <button class="toggle panel button" onclick="SummaryArchive.deleteSummary(${item.id})">Delete</button>
+        <button class="toggle panel button" onclick="viewSummary(${item.id})">View</button>
+        <button class="toggle panel button" onclick="deleteSummary(${item.id})">Delete</button>
       `;
       ul.appendChild(li);
     });
