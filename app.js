@@ -4645,7 +4645,7 @@ function clearAllSessions() {
     alert("✅ All saved routes have been cleared!");
   }
 }
-function prepareAndExport() {
+window.prepareAndExport = function() {
   loadMostRecentSession(() => {
     exportRouteSummary(); // now routeData is populated
   });
