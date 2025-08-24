@@ -393,9 +393,11 @@ window.stopTracking = function () {
 
   const wantsToFill = confirm("Do you want to fill out the accessibility questionnaire?");
   if (wantsToFill) {
-    openAccessibilityForm(() => {
-      proceedWithRouteSave();
-    });
+    openAccessibilityForm();
+    proceedWithRouteSave();
+    // openAccessibilityForm(() => {
+    //   proceedWithRouteSave();
+    // });
   } else {
     proceedWithRouteSave();
   }
