@@ -11,6 +11,7 @@ let elapsedTime = 0;
 let mediaRecorder;
 let audioChunks = [];
 let isTracking = false;
+let accessibilityStopTrack = 0;
 // let rotationEnabled = false;
 // let currentHeading = 0;
 // let lastHeading = null;
@@ -393,8 +394,9 @@ window.stopTracking = function () {
 
   const wantsToFill = confirm("Do you want to fill out the accessibility questionnaire?");
   if (wantsToFill) {
+    accessibilityStopTrack = 1;
     openAccessibilityForm();
-    proceedWithRouteSave();
+    
     // openAccessibilityForm(() => {
     //   proceedWithRouteSave();
     // });
@@ -4715,6 +4717,8 @@ function closeAccessibilityForm() {
   const overlay = document.getElementById("accessibilityOverlay");
   if (overlay) {
     overlay.style.display = "none";
+    if(accessibilityStopTrack = 1){
+      proceedWithRouteSave();}
   } else {
     console.warn("⚠️ accessibilityOverlay not found.");
   }
