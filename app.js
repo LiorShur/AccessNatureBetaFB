@@ -25,7 +25,7 @@ let accessibilityStopTrack = 0;
 // let lastOrientationUpdate = 0;
 // let mapWrapper = document.getElementById('mapWrapper'); // wrapper div for #map
 
-function setControlButtonsEnabled(enabled) {
+window.setControlButtonsEnabled = function (enabled) {
   const idsToDisable = [
     "startBtn",
     "resetBtn",
@@ -53,7 +53,7 @@ function setControlButtonsEnabled(enabled) {
 }
 
 
-function setTrackingButtonsEnabled(enabled) {
+window.setTrackingButtonsEnabled = function (enabled) {
   const startBtn = document.getElementById("startBtn");
   const pauseBtn = document.getElementById("pauseBtn");
   const stopBtn = document.getElementById("stopBtn");
