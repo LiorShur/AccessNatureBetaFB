@@ -694,14 +694,52 @@ window.addEventListener("DOMContentLoaded", () => {
 // function openAccessibilityForm() {
 //   document.getElementById("accessibilityOverlay").style.display = "flex";
 // }
-function openAccessibilityForm(onComplete) {
-  const form = document.getElementById("accessibilityOverlay");
+// function openAccessibilityForm(onComplete) {
+//   const form = document.getElementById("accessibilityOverlay");
 
-  // Prefill logic if needed
-  form.style.display = "flex";
+//   // Prefill logic if needed
+//   form.style.display = "flex";
 
-  form._onComplete = onComplete; // store callback
-}
+//   form._onComplete = onComplete; // store callback
+// }
+
+window.openAccessibilityForm = function (onCloseCallback) {
+  const form = document.getElementById("accessibilityFormContainer");
+  if (!form) return;
+
+  form.style.display = "block";
+
+  // Store the callback for later
+  form.dataset.onClose = onCloseCallback ? "true" : "";
+
+  // Attach the submit handler
+  const actualForm = document.getElementById("accessibilityForm");
+  actualForm.onsubmit = function (e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = {};
+    for (const [key, value] of formData.entries()) {
+      data[key] = value;
+    }
+
+    localStorage.setItem("accessibilityData", JSON.stringify(data));
+    alert("✅ Questionnaire saved!");
+    form.style.display = "none";
+
+    // Call the callback if it exists
+    if (onCloseCallback) {
+      onCloseCallback();
+    }
+  };
+};
+
+document.getElementById("closeAccessibilityFormBtn").onclick = function () {
+  document.getElementById("accessibilityFormContainer").style.display = "none";
+  if (typeof onCloseCallback === "function") {
+    onCloseCallback();
+  }
+};
+
 
 // function closeAccessibilityForm() {
 //   document.getElementById("accessibilityOverlay").style.display = "none";
