@@ -704,7 +704,7 @@ window.addEventListener("DOMContentLoaded", () => {
 // }
 
 window.openAccessibilityForm = function (onCloseCallback) {
-  const form = document.getElementById("accessibilityFormContainer");
+  const form = document.getElementById("accessibilityOverlay");
   if (!form) return;
 
   form.style.display = "block";
@@ -734,7 +734,7 @@ window.openAccessibilityForm = function (onCloseCallback) {
 };
 
 document.getElementById("closeAccessibilityFormBtn").onclick = function () {
-  document.getElementById("accessibilityFormContainer").style.display = "none";
+  document.getElementById("accessibilityOverlay").style.display = "none";
   if (typeof onCloseCallback === "function") {
     onCloseCallback();
   }
