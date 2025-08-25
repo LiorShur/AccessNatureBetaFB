@@ -4751,18 +4751,18 @@ function promptAccessibilityForm(callback) {
     }, 500);
   };
 }
-function closeAccessibilityForm() {
-  const overlay = document.getElementById("accessibilityOverlay");
-  if (overlay) {
-    overlay.style.display = "none";
-  } else {
-    console.warn("⚠️ accessibilityOverlay not found.");
-  }
-  if (wasTimerRunning) {
-    startTime = Date.now() - elapsedTime;
-    timerInterval = setInterval(updateTimerDisplay, 1000);
-  }
-}
+// function closeAccessibilityForm() {
+//   const overlay = document.getElementById("accessibilityOverlay");
+//   if (overlay) {
+//     overlay.style.display = "none";
+//   } else {
+//     console.warn("⚠️ accessibilityOverlay not found.");
+//   }
+//   if (wasTimerRunning) {
+//     startTime = Date.now() - elapsedTime;
+//     timerInterval = setInterval(updateTimerDisplay, 1000);
+//   }
+// }
 
 function prefillAccessibilityForm(data) {
   const form = document.getElementById("accessibilityForm");
