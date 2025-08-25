@@ -4717,8 +4717,6 @@ function closeAccessibilityForm() {
   const overlay = document.getElementById("accessibilityOverlay");
   if (overlay) {
     overlay.style.display = "none";
-    if(accessibilityStopTrack = 1){
-      proceedWithRouteSave();}
   } else {
     console.warn("⚠️ accessibilityOverlay not found.");
   }
