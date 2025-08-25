@@ -394,18 +394,18 @@ window.stopTracking = function () {
 
   const wantsToFill = confirm("Do you want to fill out the accessibility questionnaire?");
   if (wantsToFill) {
-    accessibilityStopTrack = 1;
-    openAccessibilityForm();
+    // accessibilityStopTrack = 1;
+    // openAccessibilityForm();
     
-    // openAccessibilityForm(() => {
-    //   proceedWithRouteSave();
-    // });
+    openAccessibilityForm(() => {
+      proceedWithRouteSave();
+    });
   } else {
     proceedWithRouteSave();
   }
 }
 
-function proceedWithRouteSave() {
+window.proceedWithRouteSave = function () {
   const wantsToSave = confirm("💾 Do you want to save this route?");
   if (wantsToSave) {
     const wasSaved = saveSession();
