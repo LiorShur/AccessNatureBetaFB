@@ -731,18 +731,17 @@ window.openAccessibilityForm = function (onCloseCallback) {
 
 
 // Close button handler
-  const closeBtn = document.getElementById("closeAccessibilityFormBtn");
-  if (closeBtn) {
-    closeBtn.onclick = function () {
-      formContainer.style.display = "none";
+ const closeButtons = document.querySelectorAll(".closeAccessibilityFormBtn");
 
-      // ✅ Proceed even if user doesn't fill the form
-      if (typeof onCloseCallback === "function") {
-        onCloseCallback();
-      }
-    };
-  }
-};
+closeButtons.forEach(btn => {
+  btn.onclick = function () {
+    formContainer.style.display = "none";
+
+    if (typeof onCloseCallback === "function") {
+      onCloseCallback();
+    }
+  };
+});
 
 
 
