@@ -746,9 +746,9 @@ window.openAccessibilityForm = function (onCloseCallback) {
 
 
 
-// function closeAccessibilityForm() {
-//   document.getElementById("accessibilityOverlay").style.display = "none";
-// }
+function closeAccessibilityForm() {
+  document.getElementById("accessibilityOverlay").style.display = "none";
+}
 
 // ===  ROUTE & NOTES ===
 let noteMarkers = []; // Global array to track note markers
