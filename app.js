@@ -728,7 +728,7 @@ window.openAccessibilityForm = function (onCloseCallback) {
       onCloseCallback();
     }
   };
-};
+
 
 // Close button handler
   const closeBtn = document.getElementById("closeAccessibilityFormBtn");
