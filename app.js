@@ -746,9 +746,9 @@ window.openAccessibilityForm = function (onCloseCallback) {
 
 
 
-function closeAccessibilityForm() {
-  document.getElementById("accessibilityOverlay").style.display = "none";
-}
+// function closeAccessibilityForm() {
+//   document.getElementById("accessibilityOverlay").style.display = "none";
+// }
 
 // ===  ROUTE & NOTES ===
 let noteMarkers = []; // Global array to track note markers
@@ -4810,7 +4810,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       alert("✅ Questionnaire saved and added to route!");
-      closeAccessibilityForm();
+      //closeAccessibilityForm();
       if (typeof e.target._onComplete === "function") {
     e.target._onComplete();  // resume tracking logic
     e.target._onComplete = null;
