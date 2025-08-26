@@ -740,6 +740,14 @@ document.getElementById("closeAccessibilityFormBtn").onclick = function () {
   }
 };
 
+document.getElementById("closeAccessibilityFormBtn01").onclick = function () {
+  document.getElementById("accessibilityOverlay").style.display = "none";
+  if (typeof onCloseCallback === "function") {
+    onCloseCallback();
+  }
+};
+
+
 
 // function closeAccessibilityForm() {
 //   document.getElementById("accessibilityOverlay").style.display = "none";
