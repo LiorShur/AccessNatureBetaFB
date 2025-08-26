@@ -704,17 +704,14 @@ window.addEventListener("DOMContentLoaded", () => {
 // }
 
 window.openAccessibilityForm = function (onCloseCallback) {
-  const form = document.getElementById("accessibilityOverlay");
-  if (!form) return;
+  const formContainer = document.getElementById("accessibilityOverlay");
+  if (!formContainer) return;
 
-  form.style.display = "block";
-
-  // Store the callback for later
-  form.dataset.onClose = onCloseCallback ? "true" : "";
-
-  // Attach the submit handler
-  const actualForm = document.getElementById("accessibilityForm");
-  actualForm.onsubmit = function (e) {
+  formContainer.style.display = "block";
+  const form = document.getElementById("accessibilityForm");
+ 
+  // Submit handler
+  form.onsubmit = function (e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = {};
@@ -724,26 +721,26 @@ window.openAccessibilityForm = function (onCloseCallback) {
 
     localStorage.setItem("accessibilityData", JSON.stringify(data));
     alert("✅ Questionnaire saved!");
-    form.style.display = "none";
+    formContainer.style.display = "none";
 
     // Call the callback if it exists
-    if (onCloseCallback) {
+   if (typeof onCloseCallback === "function") {
       onCloseCallback();
     }
   };
 };
 
-document.getElementById("closeAccessibilityFormBtn").onclick = function () {
-  document.getElementById("accessibilityOverlay").style.display = "none";
-  if (typeof onCloseCallback === "function") {
-    onCloseCallback();
-  }
-};
+// Close button handler
+  const closeBtn = document.getElementById("closeAccessibilityFormBtn");
+  if (closeBtn) {
+    closeBtn.onclick = function () {
+      formContainer.style.display = "none";
 
-document.getElementById("closeAccessibilityFormBtn01").onclick = function () {
-  document.getElementById("accessibilityOverlay").style.display = "none";
-  if (typeof onCloseCallback === "function") {
-    onCloseCallback();
+      // ✅ Proceed even if user doesn't fill the form
+      if (typeof onCloseCallback === "function") {
+        onCloseCallback();
+      }
+    };
   }
 };
 
