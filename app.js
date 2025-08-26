@@ -703,8 +703,10 @@ window.addEventListener("DOMContentLoaded", () => {
 //   form._onComplete = onComplete; // store callback
 // }
 
+const formContainer = document.getElementById("accessibilityOverlay");
+
 window.openAccessibilityForm = function (onCloseCallback) {
-  const formContainer = document.getElementById("accessibilityOverlay");
+  
   if (!formContainer) return;
 
   formContainer.style.display = "block";
