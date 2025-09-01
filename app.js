@@ -1012,48 +1012,48 @@ window.addEventListener("beforeunload", function (e) {
 //   }
 // };
 
-window.saveSessionToLocalStorage = function () {
-  console.log("🔍 Attempting to save session to local storage...");
+// window.saveSessionToLocalStorage = function () {
+//   console.log("🔍 Attempting to save session to local storage...");
 
-    if (!routeData || routeData.length === 0) {
-    console.log("⚠️ No route data to save to local storage.");
-    return false;
-  }
+//     if (!routeData || routeData.length === 0) {
+//     console.log("⚠️ No route data to save to local storage.");
+//     return false;
+//   }
 
-  // const name = prompt("Enter a name for this route:");
-  // if (!name) return false;
+//   // const name = prompt("Enter a name for this route:");
+//   // if (!name) return false;
 
-  const session = {
-    name,
-    date: new Date().toISOString(),
-    time: document.getElementById("timer").textContent,
-    distance: totalDistance.toFixed(2),
-    data: routeData
-  };
+//   const session = {
+//     name,
+//     date: new Date().toISOString(),
+//     time: document.getElementById("timer").textContent,
+//     distance: totalDistance.toFixed(2),
+//     data: routeData
+//   };
 
-  try {
-    const sessions = JSON.parse(localStorage.getItem("sessions") || "[]");
-    sessions.push(session);
-    localStorage.setItem("sessions", JSON.stringify(sessions));
-    localStorage.removeItem("route_backup");
+//   try {
+//     const sessions = JSON.parse(localStorage.getItem("sessions") || "[]");
+//     sessions.push(session);
+//     localStorage.setItem("sessions", JSON.stringify(sessions));
+//     localStorage.removeItem("route_backup");
 
-    console.log(`✅ Route saved successfully to local storage!`);
-    document.getElementById("resetBtn").disabled = false;
-    loadSavedSessions();
-    return true;
-  } catch (e) {
-    // console.error("❌ Save failed:", e);
-    // alert("❌ Could not save the route.");
-    // return false;
-    console.warn("❌ Save failed due to storage limits. Falling back to auto-export...");
-    exportData();
-    exportGPX();
-    exportPDF();
-    exportRouteSummary(); // ✅ Use your rich summary generator
-    alert("🛡 Storage full. Auto-exported full route summary as backup.");
-    return false;
-  }
-};
+//     console.log(`✅ Route saved successfully to local storage!`);
+//     document.getElementById("resetBtn").disabled = false;
+//     loadSavedSessions();
+//     return true;
+//   } catch (e) {
+//     // console.error("❌ Save failed:", e);
+//     // alert("❌ Could not save the route.");
+//     // return false;
+//     console.warn("❌ Save failed due to storage limits. Falling back to auto-export...");
+//     exportData();
+//     exportGPX();
+//     exportPDF();
+//     exportRouteSummary(); // ✅ Use your rich summary generator
+//     alert("🛡 Storage full. Auto-exported full route summary as backup.");
+//     return false;
+//   }
+// };
 
 import { db, storage, auth } from './firebase-setup.js';
 
