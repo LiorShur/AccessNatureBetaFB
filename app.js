@@ -705,7 +705,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
 const formContainer = document.getElementById("accessibilityOverlay");
 
-window.openAccessibilityForm = function (onCloseCallback) {}
+window.openAccessibilityForm = function (onCloseCallback) {
+  const formContainer = document.getElementById("accessibilityOverlay");
   
   if (!formContainer) return;
 
@@ -726,24 +727,23 @@ window.openAccessibilityForm = function (onCloseCallback) {}
     formContainer.style.display = "none";
 
     // Call the callback if it exists
-   if (typeof onCloseCallback === "function") {
-      onCloseCallback();
-    }
-  };
-
-
-// Close button handler
- const closeButtons = document.querySelectorAll(".closeAccessibilityFormBtn");
-
-closeButtons.forEach(btn => {
-  btn.onclick = function () {
-    formContainer.style.display = "none";
-
     if (typeof onCloseCallback === "function") {
       onCloseCallback();
     }
   };
-});
+
+  // Close button handler
+  const closeButtons = document.querySelectorAll(".closeAccessibilityFormBtn");
+  closeButtons.forEach(btn => {
+    btn.onclick = function () {
+      formContainer.style.display = "none";
+
+      if (typeof onCloseCallback === "function") {
+        onCloseCallback();
+      }
+    };
+  });
+};
 
 
 
