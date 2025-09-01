@@ -705,7 +705,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 const formContainer = document.getElementById("accessibilityOverlay");
 
-window.openAccessibilityForm = function (onCloseCallback) {
+window.openAccessibilityForm = function (onCloseCallback) {}
   
   if (!formContainer) return;
 
